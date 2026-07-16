@@ -1,12 +1,11 @@
 FROM php:8.4-fpm-alpine
 
-
 RUN apk add --no-cache \
+    nginx \
     git \
     unzip \
     libpq-dev \
     icu-dev
-
 
 RUN docker-php-ext-install \
     pdo \
@@ -17,13 +16,9 @@ RUN docker-php-ext-install \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-
 WORKDIR /var/www/html
 
-
-# najpierw pliki composera (cache dockera)
 COPY composer.json composer.lock ./
-
 
 RUN composer install \
     --no-interaction \
@@ -32,16 +27,22 @@ RUN composer install \
     --no-progress
 
 
-# teraz kopiujemy całą aplikację Symfony
 COPY . .
 
 
 RUN composer dump-autoload --optimize
 
+
 RUN mkdir -p var/cache var/log \
     && chmod -R 777 var
 
-RUN php bin/console cache:clear --env=prod || true
+
+COPY docker/prod/nginx.conf /etc/nginx/http.d/default.conf
+COPY docker/prod/start.sh /start.sh
+
+RUN chmod +x /start.sh
 
 
-CMD ["php-fpm"]
+EXPOSE 10000
+
+CMD ["/start.sh"]
