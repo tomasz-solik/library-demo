@@ -34,14 +34,12 @@ RUN composer dump-autoload --optimize
 
 
 RUN mkdir -p var/cache var/log \
-    && chmod -R 777 var
-
+    && chown -R www-data:www-data var
 
 COPY docker/prod/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/prod/start.sh /start.sh
 
 RUN chmod +x /start.sh
-
 
 EXPOSE 10000
 
