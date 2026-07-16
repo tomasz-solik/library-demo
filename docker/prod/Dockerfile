@@ -5,7 +5,8 @@ RUN apk add --no-cache \
     git \
     unzip \
     libpq-dev \
-    icu-dev
+    icu-dev \
+    postgresql-client
 
 RUN docker-php-ext-install \
     pdo \
@@ -34,7 +35,8 @@ RUN composer dump-autoload --optimize
 
 
 RUN mkdir -p var/cache var/log \
-    && chown -R www-data:www-data var
+    && chown -R www-data:www-data var \
+    && chmod -R 775 var
 
 COPY docker/prod/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/prod/start.sh /start.sh
