@@ -16,12 +16,24 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/book/{id}/return', name: 'api_book_return', methods: ['POST'])]
 final class ReturnBookController
 {
-    #[OA\post(
+    #[OA\Post(
         summary: 'Return book',
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Book identifier',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(
+                    type: 'integer',
+                    example: 1
+                )
+            ),
+        ],
         responses: [
             new OA\Response(response: 200, description: 'Book returned'),
             new OA\Response(response: 404, description: 'Not Found'),
-            new OA\Response(response: 404, description: 'Conflict'),
+            new OA\Response(response: 409, description: 'Conflict'),
         ],
     )]
     public function __invoke(int $id, ReturnBookHandler $handler): JsonResponse

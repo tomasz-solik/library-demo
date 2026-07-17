@@ -17,6 +17,24 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route('/api/book', name: 'api_book_create', methods: ['POST'])]
 final class CreateBookController
 {
+    #[OA\Post(
+        summary: 'Create book',
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['serialNumber', 'title', 'author'],
+                properties: [
+                    new OA\Property(property: 'serialNumber', type: 'string', example: '123456'),
+                    new OA\Property(property: 'title', type: 'string', example: 'Clean Code' ),
+                    new OA\Property(property: 'author', type: 'string', example: 'Robert C. Martin'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Data'),
+            new OA\Response(response: 404, description: 'Not Found'),
+        ],
+    )]
     public function __invoke(
         Request $request,
         CreateBookHandler $handler,

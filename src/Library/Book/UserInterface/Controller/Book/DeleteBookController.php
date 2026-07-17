@@ -18,7 +18,16 @@ final class DeleteBookController
     #[OA\Delete(
         summary: 'Delete one book',
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(
+                name: 'id',
+                description: 'Book identifier',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(
+                    type: 'integer',
+                    example: 1
+                )
+            ),
         ],
         responses: [
             new OA\Response(response: 204, description: 'Deleted'),
