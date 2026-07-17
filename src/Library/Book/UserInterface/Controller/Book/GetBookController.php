@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Library\Book\UserInterface\Controller;
+declare(strict_types=1);
+
+namespace App\Library\Book\UserInterface\Controller\Book;
 
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
