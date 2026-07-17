@@ -14,6 +14,8 @@ RUN docker-php-ext-install \
     intl \
     opcache
 
+RUN docker-php-ext-enable pdo_pgsql
+
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
