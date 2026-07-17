@@ -44,4 +44,8 @@ RUN mkdir -p var/cache var/log \
 RUN php bin/console cache:clear --env=prod || true
 
 
-CMD ["php-fpm"]
+COPY docker/php/start.sh /usr/local/bin/start.sh
+
+RUN chmod +x /usr/local/bin/start.sh
+
+ENTRYPOINT ["start.sh"]
