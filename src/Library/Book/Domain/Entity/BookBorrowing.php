@@ -76,9 +76,9 @@ class BookBorrowing
         return $this->returnedAt;
     }
 
-    public function setReturnedAt(?DateTimeImmutable $returnedAt): static
+    public function returnBook(): static
     {
-        $this->returnedAt = $returnedAt;
+        $this->returnedAt = new DateTimeImmutable();
 
         return $this;
     }

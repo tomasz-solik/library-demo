@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Library\Book\Application\BookBorrowing\ReturnBook;
 
-class ReturnBookCommand
+final readonly class ReturnBookCommand
 {
-
+    public function __construct(
+        public int $bookId
+    ) {
+    }
 }

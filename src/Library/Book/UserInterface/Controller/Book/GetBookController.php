@@ -38,6 +38,10 @@ final class GetBookController
                 'title' => $book->title,
                 'author' => $book->author,
                 'isBorrowed' => $book->isBorrowed,
+                'borrowedBy' => [
+                    'borrowerCardNumber' => $book->borrowerCardNumber,
+                    'borrowedAt' => $book->borrowedAt,
+                ]
             ]);
         } catch (BookNotFoundException $exception) {
             return new JsonResponse(

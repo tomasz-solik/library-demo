@@ -20,6 +20,10 @@ final readonly class CreateBookCommand
         #[Assert\NotBlank(
             message: 'Title is required'
         )]
+        #[Assert\Regex(
+            pattern: '/\S/',
+            message: 'Title cannot consist of only spaces'
+        )]
         #[Assert\Length(
             max: 255,
             maxMessage: 'Title cannot exceed {{ limit }} characters'
@@ -27,6 +31,10 @@ final readonly class CreateBookCommand
         public string $title,
         #[Assert\NotBlank(
             message: 'Author is required'
+        )]
+        #[Assert\Regex(
+            pattern: '/\S/',
+            message: 'Author cannot consist of only spaces'
         )]
         #[Assert\Length(
             max: 255,

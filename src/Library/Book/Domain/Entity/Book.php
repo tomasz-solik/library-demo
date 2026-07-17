@@ -29,6 +29,15 @@ class Book
     #[ORM\Column(name: 'author', length: 255)]
     private string $author;
 
+    /**
+     * ADR:
+     * It stores the current borrowing status to optimize frequent read operations
+     * and avoid additional queries to the BookBorrowing table when checking
+     * book availability. The complete borrowing history remains stored in
+     * the BookBorrowing entity.
+     *
+     * Decision made by: Tomasz Solik
+     */
     #[ORM\Column(name: 'is_borrowed', type: 'boolean', options: ['default' => false])]
     private bool $isBorrowed = false;
 
@@ -127,7 +136,7 @@ class Book
         $this->isBorrowed = true;
     }
 
-    public function return(): void
+    public function markAsReturned(): void
     {
         $this->isBorrowed = false;
     }

@@ -11,7 +11,9 @@ final readonly class BookResponse
         public string $serialNumber,
         public string $title,
         public string $author,
-        public bool $isBorrowed
+        public bool $isBorrowed,
+        public ?string $borrowerCardNumber,
+        public ?string $borrowedAt,
     ) {
     }
 }

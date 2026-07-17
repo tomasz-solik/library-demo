@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Library\Book\Infrastructure\Repository;
 
+use App\Library\Book\Domain\Entity\Book;
 use App\Library\Book\Domain\Entity\BookBorrowing;
 use App\Library\Book\Domain\Repository\BookBorrowingRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -19,32 +20,18 @@ class BookBorrowingRepository extends ServiceEntityRepository implements BookBor
         parent::__construct($registry, BookBorrowing::class);
     }
 
-    //    /**
-    //     * @return BookBorrowing[] Returns an array of BookBorrowing objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('b.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?BookBorrowing
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
     public function save(BookBorrowing $borrowing): void
     {
         $this->getEntityManager()->persist($borrowing);
+    }
+
+    public function findActiveBorrowingForBook(Book $book): ?BookBorrowing
+    {
+        return $this->createQueryBuilder('bb')
+            ->where('bb.book = :book')
+            ->andWhere('bb.returnedAt IS NULL')
+            ->setParameter('book', $book)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }
