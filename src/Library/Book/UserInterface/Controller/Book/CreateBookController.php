@@ -6,6 +6,7 @@ namespace App\Library\Book\UserInterface\Controller\Book;
 
 use App\Library\Book\Application\Book\CreateBook\CreateBookCommand;
 use App\Library\Book\Application\Book\CreateBook\CreateBookHandler;
+use App\Library\Book\Domain\Exception\BookSerialNumberAlreadyExistsException;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,38 +28,47 @@ final class CreateBookController
             true
         );
 
-        $command = new CreateBookCommand(
-            $data['serialNumber'] ?? '',
-            $data['title'] ?? '',
-            $data['author'] ?? ''
-        );
+        try {
+            $command = new CreateBookCommand(
+                $data['serialNumber'] ?? '',
+                $data['title'] ?? '',
+                $data['author'] ?? ''
+            );
 
-        $errors = $validator->validate($command);
+            $errors = $validator->validate($command);
 
+            if (count($errors) > 0) {
 
-        if (count($errors) > 0) {
+                return new JsonResponse([
+                    'message' => 'Validation failed',
+                    'errors' => array_map(
+                        fn($error) => [
+                            'field' => $error->getPropertyPath(),
+                            'message' => $error->getMessage()
+                        ],
+                        iterator_to_array($errors)
+                    )
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            $book = $handler($command);
 
             return new JsonResponse([
-                'message' => 'Validation failed',
-                'errors' => array_map(
-                    fn($error) => [
-                        'field' => $error->getPropertyPath(),
-                        'message' => $error->getMessage()
-                    ],
-                    iterator_to_array($errors)
-                )
-            ], Response::HTTP_BAD_REQUEST);
+                'id' => $book->getId(),
+                'serialNumber' => $book->getSerialNumber(),
+                'title' => $book->getTitle(),
+                'author' => $book->getAuthor(),
+                'isBorrowed' => $book->isBorrowed(),
+            ], Response::HTTP_CREATED);
+
+        } catch (BookSerialNumberAlreadyExistsException $exception) {
+
+            return new JsonResponse(
+                [
+                    'message' => $exception->getMessage()
+                ],
+                Response::HTTP_CONFLICT
+            );
         }
-
-
-        $book = $handler($command);
-
-        return new JsonResponse([
-            'id' => $book->getId(),
-            'serialNumber' => $book->getSerialNumber(),
-            'title' => $book->getTitle(),
-            'author' => $book->getAuthor(),
-            'isBorrowed' => $book->isBorrowed(),
-        ], Response::HTTP_CREATED);
     }
 }

@@ -6,11 +6,13 @@ namespace App\Library\Book\Application\Book\DeleteBook;
 
 use App\Library\Book\Domain\Exception\BookNotFoundException;
 use App\Library\Book\Domain\Repository\BookRepositoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class DeleteBookHandler
 {
     public function __construct(
-        private BookRepositoryInterface $bookRepository
+        private BookRepositoryInterface $bookRepository,
+        private EntityManagerInterface $entityManager
     ) {
     }
 
@@ -26,5 +28,6 @@ final readonly class DeleteBookHandler
         $book->delete();
 
         $this->bookRepository->save($book);
+        $this->entityManager->flush();
     }
 }

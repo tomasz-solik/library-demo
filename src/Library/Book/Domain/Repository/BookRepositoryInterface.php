@@ -10,14 +10,14 @@ interface BookRepositoryInterface
 {
     public function save(Book $book): void;
 
-    /**
-     * @param int $id
-     * @return Book|null
-     */
     public function findById(int $id): ?Book;
+
+    public function findByIdForUpdate(int $id): ?Book;
 
     /**
      * @return Book[]
      */
     public function findAll(): array;
+
+    public function existsBySerialNumber(string $serialNumber): bool;
 }

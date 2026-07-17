@@ -43,4 +43,8 @@ class BookBorrowingRepository extends ServiceEntityRepository implements BookBor
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function save(BookBorrowing $borrowing): void
+    {
+        $this->getEntityManager()->persist($borrowing);
+    }
 }

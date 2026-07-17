@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/book/{id}/return', name: 'api_book_return', methods: ['UPDATE'])]
 final class ReturnBookController
 {
-    #[OA\Get(
+    #[OA\post(
         summary: 'Return book',
         responses: [
             new OA\Response(response: 200, description: 'Data'),

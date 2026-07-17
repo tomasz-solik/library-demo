@@ -7,6 +7,7 @@ namespace App\Library\Book\Infrastructure\Repository;
 use App\Library\Book\Domain\Entity\Book;
 use App\Library\Book\Domain\Repository\BookRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\LockMode;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -46,7 +47,6 @@ class BookRepository extends ServiceEntityRepository implements BookRepositoryIn
     public function save(Book $book): void
     {
         $this->getEntityManager()->persist($book);
-        $this->getEntityManager()->flush();
     }
 
     public function findById(int $id): ?Book
@@ -59,11 +59,34 @@ class BookRepository extends ServiceEntityRepository implements BookRepositoryIn
             ->getOneOrNullResult();
     }
 
+    public function findByIdForUpdate(int $id): ?Book
+    {
+        return $this->createQueryBuilder('b')
+            ->where('b.id = :id')
+            ->andWhere('b.deletedAt IS NULL')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->setLockMode(LockMode::PESSIMISTIC_WRITE)
+            ->getOneOrNullResult();
+    }
+
     public function findAll(): array
     {
         return $this->createQueryBuilder('b')
             ->where('b.deletedAt IS NULL')
             ->getQuery()
             ->getResult();
+    }
+
+    public function existsBySerialNumber(string $serialNumber): bool
+    {
+        $count = $this->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->where('b.serialNumber = :serialNumber')
+            ->setParameter('serialNumber', $serialNumber)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return (int) $count > 0;
     }
 }

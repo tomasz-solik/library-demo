@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/book/{id}', name: 'api_book_delete', methods: ['DELETE'])]
 final class DeleteBookController
 {
-    #[OA\Get(
+    #[OA\Delete(
         summary: 'Delete one book',
         parameters: [
             new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),

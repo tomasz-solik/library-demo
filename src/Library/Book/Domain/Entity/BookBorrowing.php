@@ -20,14 +20,14 @@ class BookBorrowing
     #[ORM\JoinColumn(nullable: false)]
     private ?Book $book = null;
 
-    #[ORM\Column(length: 6)]
-    private string $borrower_card_number;
+    #[ORM\Column(name: 'borrower_card_number', length: 6)]
+    private string $borrowerCardNumber;
 
-    #[ORM\Column]
-    private DateTimeImmutable $borrowed_at;
+    #[ORM\Column(name: 'borrowed_at', type: 'datetime_immutable')]
+    private DateTimeImmutable $borrowedAt;
 
-    #[ORM\Column(nullable: true)]
-    private ?DateTimeImmutable $returned_at = null;
+    #[ORM\Column(name: 'returned_at', type: 'datetime_immutable', nullable: true)]
+    private ?DateTimeImmutable $returnedAt = null;
 
     public function getId(): ?int
     {
@@ -49,37 +49,51 @@ class BookBorrowing
 
     public function getBorrowerCardNumber(): string
     {
-        return $this->borrower_card_number;
+        return $this->borrowerCardNumber;
     }
 
-    public function setBorrowerCardNumber(string $borrower_card_number): static
+    public function setBorrowerCardNumber(string $borrowerCardNumber): static
     {
-        $this->borrower_card_number = $borrower_card_number;
+        $this->borrowerCardNumber = $borrowerCardNumber;
 
         return $this;
     }
 
     public function getBorrowedAt(): DateTimeImmutable
     {
-        return $this->borrowed_at;
+        return $this->borrowedAt;
     }
 
-    public function setBorrowedAt(DateTimeImmutable $borrowed_at): static
+    public function setBorrowedAt(DateTimeImmutable $borrowedAt): static
     {
-        $this->borrowed_at = $borrowed_at;
+        $this->borrowedAt = $borrowedAt;
 
         return $this;
     }
 
     public function getReturnedAt(): ?DateTimeImmutable
     {
-        return $this->returned_at;
+        return $this->returnedAt;
     }
 
-    public function setReturnedAt(?DateTimeImmutable $returned_at): static
+    public function setReturnedAt(?DateTimeImmutable $returnedAt): static
     {
-        $this->returned_at = $returned_at;
+        $this->returnedAt = $returnedAt;
 
         return $this;
+    }
+
+    public static function create(
+        Book $book,
+        string $borrowerCardNumber
+    ): self {
+
+        $borrowing = new self();
+
+        $borrowing->book = $book;
+        $borrowing->borrowerCardNumber = $borrowerCardNumber;
+        $borrowing->borrowedAt = new \DateTimeImmutable();
+
+        return $borrowing;
     }
 }

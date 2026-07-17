@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Library\Book\Domain\Entity;
 
+use App\Library\Book\Domain\Exception\BookAlreadyBorrowedException;
 use App\Library\Book\Domain\Exception\CannotDeleteBorrowedBookException;
 use App\Library\Book\Infrastructure\Repository\BookRepository;
 use DateTimeImmutable;
@@ -115,6 +116,20 @@ class Book
         }
 
         $this->deletedAt = new DateTimeImmutable();
+    }
+
+    public function borrow(): void
+    {
+        if ($this->isBorrowed()) {
+            throw new BookAlreadyBorrowedException();
+        }
+
+        $this->isBorrowed = true;
+    }
+
+    public function return(): void
+    {
+        $this->isBorrowed = false;
     }
 
     /**
