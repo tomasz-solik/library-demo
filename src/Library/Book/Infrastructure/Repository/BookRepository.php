@@ -45,16 +45,25 @@ class BookRepository extends ServiceEntityRepository implements BookRepositoryIn
     //    }
     public function save(Book $book): void
     {
-        // TODO: Implement save() method.
+        $this->getEntityManager()->persist($book);
+        $this->getEntityManager()->flush();
     }
 
     public function findById(int $id): ?Book
     {
-        // TODO: Implement findById() method.
+        return $this->createQueryBuilder('b')
+            ->where('b.id = :id')
+            ->andWhere('b.deletedAt IS NULL')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
-    public function delete(Book $book): void
+    public function findAll(): array
     {
-        // TODO: Implement delete() method.
+        return $this->createQueryBuilder('b')
+            ->where('b.deletedAt IS NULL')
+            ->getQuery()
+            ->getResult();
     }
 }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Library\Book\Domain\Entity;
 
+use App\Library\Book\Domain\Exception\CannotDeleteBorrowedBookException;
 use App\Library\Book\Infrastructure\Repository\BookRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -28,6 +30,9 @@ class Book
 
     #[ORM\Column(name: 'is_borrowed', type: 'boolean', options: ['default' => false])]
     private bool $isBorrowed = false;
+
+    #[ORM\Column(name: 'deleted_at', type: 'datetime_immutable', nullable: true)]
+    private ?DateTimeImmutable $deletedAt = null;
 
     #[ORM\OneToMany(
         targetEntity: BookBorrowing::class,
@@ -86,12 +91,30 @@ class Book
         return $this->isBorrowed;
     }
 
-
     public function setBorrowed(bool $isBorrowed): static
     {
         $this->isBorrowed = $isBorrowed;
 
         return $this;
+    }
+
+    public function getDeletedAt(): ?DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deletedAt !== null;
+    }
+
+    public function delete(): void
+    {
+        if ($this->isBorrowed()) {
+            throw new CannotDeleteBorrowedBookException();
+        }
+
+        $this->deletedAt = new DateTimeImmutable();
     }
 
     /**

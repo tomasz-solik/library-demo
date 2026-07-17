@@ -20,6 +20,4 @@ interface BookRepositoryInterface
      * @return Book[]
      */
     public function findAll(): array;
-
-    public function delete(Book $book): void;
 }

@@ -8,7 +8,7 @@ use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/api/book/{id}/return', name: 'api_book_borrow', methods: ['UPDATE'])]
+#[Route('/api/book/{id}/return', name: 'api_book_return', methods: ['UPDATE'])]
 final class ReturnBookController
 {
     #[OA\Get(
