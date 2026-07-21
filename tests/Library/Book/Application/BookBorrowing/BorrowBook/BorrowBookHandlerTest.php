@@ -43,7 +43,7 @@ final class BorrowBookHandlerTest extends TestCase
     public function testBorrowsBookSuccessfully(): void
     {
         $bookId = 1;
-        $cardNumber = 'CARD-12345';
+        $cardNumber = '123456';
         $command = new BorrowBookCommand(bookId: $bookId, borrowerCardNumber: $cardNumber);
 
         $book = $this->createMock(Book::class);
@@ -76,7 +76,7 @@ final class BorrowBookHandlerTest extends TestCase
     public function testThrowsExceptionWhenBookNotFound(): void
     {
         $nonExistentBookId = 999;
-        $command = new BorrowBookCommand(bookId: $nonExistentBookId, borrowerCardNumber: 'CARD-12345');
+        $command = new BorrowBookCommand(bookId: $nonExistentBookId, borrowerCardNumber: '123456');
 
         $this->bookRepository
             ->expects($this->once())
@@ -104,7 +104,7 @@ final class BorrowBookHandlerTest extends TestCase
     public function testThrowsExceptionWhenBookIsAlreadyBorrowed(): void
     {
         $bookId = 1;
-        $command = new BorrowBookCommand(bookId: $bookId, borrowerCardNumber: 'CARD-12345');
+        $command = new BorrowBookCommand(bookId: $bookId, borrowerCardNumber: '123456');
 
         $book = $this->createMock(Book::class);
         $book->method('isBorrowed')->willReturn(true);

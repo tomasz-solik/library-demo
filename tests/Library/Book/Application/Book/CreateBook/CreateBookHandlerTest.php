@@ -33,7 +33,7 @@ final class CreateBookHandlerTest extends TestCase
     public function testCreatesBookSuccessfully(): void
     {
         $command = new CreateBookCommand(
-            serialNumber: 'ISBN-12345',
+            serialNumber: '123456',
             title: 'Czysty Kod',
             author: 'Robert C. Martin'
         );
@@ -41,7 +41,7 @@ final class CreateBookHandlerTest extends TestCase
         $this->bookRepository
             ->expects($this->once())
             ->method('existsBySerialNumber')
-            ->with('ISBN-12345')
+            ->with('123456')
             ->willReturn(false);
 
         $this->bookRepository
@@ -55,27 +55,24 @@ final class CreateBookHandlerTest extends TestCase
 
         $book = ($this->handler)($command);
 
-        // 3. Assert (Asercje)
         $this->assertInstanceOf(Book::class, $book);
-        $this->assertSame('ISBN-12345', $book->getSerialNumber());
+        $this->assertSame('123456', $book->getSerialNumber());
         $this->assertSame('Czysty Kod', $book->getTitle());
         $this->assertSame('Robert C. Martin', $book->getAuthor());
     }
 
     public function testThrowsExceptionWhenSerialNumberAlreadyExists(): void
     {
-        // 1. Arrange
         $command = new CreateBookCommand(
-            serialNumber: 'EXISTING-SERIAL',
+            serialNumber: '123456',
             title: 'Dowolny tytuł',
             author: 'Dowolny autor'
         );
 
-        // Repozytorium zgłasza, że numer już istnieje
         $this->bookRepository
             ->expects($this->once())
             ->method('existsBySerialNumber')
-            ->with('EXISTING-SERIAL')
+            ->with('123456')
             ->willReturn(true);
 
         $this->bookRepository
@@ -88,7 +85,6 @@ final class CreateBookHandlerTest extends TestCase
 
         $this->expectException(BookSerialNumberAlreadyExistsException::class);
 
-        // 2. Act
         ($this->handler)($command);
     }
 }

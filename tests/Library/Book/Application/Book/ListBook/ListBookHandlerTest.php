@@ -29,14 +29,14 @@ final class ListBookHandlerTest extends TestCase
 
         $book1 = $this->createStub(Book::class);
         $book1->method('getId')->willReturn(1);
-        $book1->method('getSerialNumber')->willReturn('ISBN-111');
+        $book1->method('getSerialNumber')->willReturn('123456');
         $book1->method('getTitle')->willReturn('Czysty Kod');
         $book1->method('getAuthor')->willReturn('Robert C. Martin');
         $book1->method('isBorrowed')->willReturn(false);
 
         $book2 = $this->createStub(Book::class);
         $book2->method('getId')->willReturn(2);
-        $book2->method('getSerialNumber')->willReturn('ISBN-222');
+        $book2->method('getSerialNumber')->willReturn('123457');
         $book2->method('getTitle')->willReturn('DDD');
         $book2->method('getAuthor')->willReturn('Eric Evans');
         $book2->method('isBorrowed')->willReturn(true);
@@ -52,13 +52,13 @@ final class ListBookHandlerTest extends TestCase
         $this->assertContainsOnlyInstancesOf(ListBookResponse::class, $result);
 
         $this->assertSame(1, $result[0]->id);
-        $this->assertSame('ISBN-111', $result[0]->serialNumber);
+        $this->assertSame('123456', $result[0]->serialNumber);
         $this->assertSame('Czysty Kod', $result[0]->title);
         $this->assertSame('Robert C. Martin', $result[0]->author);
         $this->assertFalse($result[0]->isBorrowed);
 
         $this->assertSame(2, $result[1]->id);
-        $this->assertSame('ISBN-222', $result[1]->serialNumber);
+        $this->assertSame('123457', $result[1]->serialNumber);
         $this->assertSame('DDD', $result[1]->title);
         $this->assertSame('Eric Evans', $result[1]->author);
         $this->assertTrue($result[1]->isBorrowed);

@@ -44,14 +44,14 @@ final class GetBookHandlerTest extends TestCase
 
         $book = $this->createStub(Book::class);
         $book->method('getId')->willReturn($bookId);
-        $book->method('getSerialNumber')->willReturn('ISBN-12345');
+        $book->method('getSerialNumber')->willReturn('123456');
         $book->method('getTitle')->willReturn('Czysty Kod');
         $book->method('getAuthor')->willReturn('Robert C. Martin');
         $book->method('isBorrowed')->willReturn(true);
 
         $borrowedAt = new DateTimeImmutable('2026-01-15 10:00:00');
         $borrowing = $this->createStub(BookBorrowing::class);
-        $borrowing->method('getBorrowerCardNumber')->willReturn('CARD-999');
+        $borrowing->method('getBorrowerCardNumber')->willReturn('123456');
         $borrowing->method('getBorrowedAt')->willReturn($borrowedAt);
 
         $this->bookRepository
@@ -70,11 +70,11 @@ final class GetBookHandlerTest extends TestCase
 
         $this->assertInstanceOf(BookResponse::class, $response);
         $this->assertSame($bookId, $response->id);
-        $this->assertSame('ISBN-12345', $response->serialNumber);
+        $this->assertSame('123456', $response->serialNumber);
         $this->assertSame('Czysty Kod', $response->title);
         $this->assertSame('Robert C. Martin', $response->author);
         $this->assertTrue($response->isBorrowed);
-        $this->assertSame('CARD-999', $response->borrowerCardNumber);
+        $this->assertSame('123456', $response->borrowerCardNumber);
         $this->assertSame('2026-01-15 10:00:00', $response->borrowedAt);
     }
 
@@ -85,7 +85,7 @@ final class GetBookHandlerTest extends TestCase
 
         $book = $this->createStub(Book::class);
         $book->method('getId')->willReturn($bookId);
-        $book->method('getSerialNumber')->willReturn('ISBN-67890');
+        $book->method('getSerialNumber')->willReturn('123456');
         $book->method('getTitle')->willReturn('DDD');
         $book->method('getAuthor')->willReturn('Eric Evans');
         $book->method('isBorrowed')->willReturn(false);
